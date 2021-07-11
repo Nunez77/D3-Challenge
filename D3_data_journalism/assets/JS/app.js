@@ -134,35 +134,29 @@ function styleX(value, Selected_X) {
 // Function used for updating circles group with new tooltip
 function updateToolTip(Selected_X, Selected_Y, circlesGroup) {
 
-    //select x label
-    //poverty percentage
+    // X Selection
     if (Selected_X === 'poverty') {
         var xLabel = "Poverty:";
     }
-    //household income in dollars
     else if (Selected_X === 'income') {
         var xLabel = "Median Income:";
     }
-    //age (number)
     else {
         var xLabel = "Age:";
     }
 
-    //select y label
-    //percentage lacking healthcare
+    // Y Selection
     if (Selected_Y === 'healthcare') {
         var yLabel = "No Healthcare:"
     }
-    //percentage obese
     else if (Selected_Y === 'obesity') {
         var yLabel = "Obesity:"
     }
-    //smoking percentage
     else {
         var yLabel = "Smokers:"
     }
 
-    //create tooltip
+    // Tooltip
     var toolTip = d3.tip()
         .attr("class", "d3-tip")
         .offset([-8, 0])
@@ -172,19 +166,18 @@ function updateToolTip(Selected_X, Selected_Y, circlesGroup) {
 
     circlesGroup.call(toolTip);
 
-    //add events
+    // Add mouseover event
     circlesGroup.on("mouseover", toolTip.show)
     .on("mouseout", toolTip.hide);
-
     return circlesGroup;
 }
 
-//retrieve csv data and execute everything below
+// Retrieve data and generate plot
 d3.csv("./assets/data/data.csv").then(function(DescriptiveData) {
 
     console.log(DescriptiveData);
 
-    //parse data
+    // Parse Data
     DescriptiveData.forEach(function(data) {
         data.obesity = +data.obesity;
         data.income = +data.income;
@@ -194,26 +187,26 @@ d3.csv("./assets/data/data.csv").then(function(DescriptiveData) {
         data.poverty = +data.poverty;
     });
 
-    //create first linear scales
+    // Create initial scales
     var xLinearScale = xScale(DescriptiveData, Selected_X);
     var yLinearScale = yScale(DescriptiveData, Selected_Y);
 
-    //create initial axis functions
+    // Create initial axis functions
     var bottomAxis = d3.axisBottom(xLinearScale);
     var leftAxis = d3.axisLeft(yLinearScale);
 
-    //append x axis
+    // Append X axis
     var xAxis = chartGroup.append("g")
         .classed("x-axis", true)
         .attr("transform", `translate(0, ${height})`)
         .call(bottomAxis);
 
-    //append y axis
+    // Append Y axis
     var yAxis = chartGroup.append("g")
         .classed("y-axis", true)
         .call(leftAxis);
 
-    //append initial circles
+    // Append Circles
     var circlesGroup = chartGroup.selectAll("circle")
         .data(DescriptiveData)
         .enter()
@@ -224,7 +217,7 @@ d3.csv("./assets/data/data.csv").then(function(DescriptiveData) {
         .attr("r", 12)
         .attr("opacity", ".5");
 
-    //append initial text
+    // Append Text
     var textGroup = chartGroup.selectAll(".stateText")
         .data(DescriptiveData)
         .enter()
@@ -236,11 +229,11 @@ d3.csv("./assets/data/data.csv").then(function(DescriptiveData) {
         .attr("font-size", "10px")
         .text(function(d){return d.abbr});
 
-    //create group for 3 x-axis labels
-    var xLabelsGroup = chartGroup.append("g")
+    // Group X axes labels
+    var GroupX = chartGroup.append("g")
         .attr("transform", `translate(${width / 2}, ${height + 20 + margin.top})`);
 
-    var povertyLabel = xLabelsGroup.append("text")
+    var povertyLabel = GroupX.append("text")
         .classed("aText", true)
         .classed("active", true)
         .attr("x", 0)
@@ -248,7 +241,7 @@ d3.csv("./assets/data/data.csv").then(function(DescriptiveData) {
         .attr("value", "poverty")
         .text("In Poverty (%)");
 
-    var ageLabel = xLabelsGroup.append("text")
+    var ageLabel = GroupX.append("text")
         .classed("aText", true)
         .classed("inactive", true)
         .attr("x", 0)
@@ -256,7 +249,7 @@ d3.csv("./assets/data/data.csv").then(function(DescriptiveData) {
         .attr("value", "age")
         .text("Age (Median)")
 
-    var incomeLabel = xLabelsGroup.append("text")
+    var incomeLabel = GroupX.append("text")
         .classed("aText", true)
         .classed("inactive", true)
         .attr("x", 0)
@@ -264,11 +257,11 @@ d3.csv("./assets/data/data.csv").then(function(DescriptiveData) {
         .attr("value", "income")
         .text("Household Income (Median)")
 
-    //create group for 3 y-axis labels
-    var yLabelsGroup = chartGroup.append("g")
+    // Grup Y axis labels
+    var GroupY = chartGroup.append("g")
         .attr("transform", `translate(${0 - margin.left/4}, ${(height/2)})`);
 
-    var healthcareLabel = yLabelsGroup.append("text")
+    var healthcareLabel = GroupY.append("text")
         .classed("aText", true)
         .classed("active", true)
         .attr("x", 0)
@@ -276,9 +269,9 @@ d3.csv("./assets/data/data.csv").then(function(DescriptiveData) {
         .attr("dy", "1em")
         .attr("transform", "rotate(-90)")
         .attr("value", "healthcare")
-        .text("Lacks Healthcare (%)");
+        .text("No Healthcare (%)");
 
-    var smokesLabel = yLabelsGroup.append("text")
+    var smokesLabel = GroupY.append("text")
         .classed("aText", true)
         .classed("inactive", true)
         .attr("x", 0)
@@ -288,7 +281,7 @@ d3.csv("./assets/data/data.csv").then(function(DescriptiveData) {
         .attr("value", "smokes")
         .text("Smokes (%)");
 
-    var obesityLabel = yLabelsGroup.append("text")
+    var obesityLabel = GroupY.append("text")
         .classed("aText", true)
         .classed("inactive", true)
         .attr("x", 0)
@@ -298,37 +291,37 @@ d3.csv("./assets/data/data.csv").then(function(DescriptiveData) {
         .attr("value", "obesity")
         .text("Obese (%)");
 
-    //updateToolTip function with data
+    // Update tooltip function
     var circlesGroup = updateToolTip(Selected_X, Selected_Y, circlesGroup);
 
-    //x axis labels event listener
-    xLabelsGroup.selectAll("text")
+    // X axis event listener
+    GroupX.selectAll("text")
         .on("click", function() {
-            //get value of selection
+            // Get value
             var value = d3.select(this).attr("value");
 
-            //check if value is same as current axis
+            // Is it the same?
             if (value != Selected_X) {
 
-                //replace Selected_X with value
+                // Replace X axis selection with new value
                 Selected_X = value;
 
-                //update x scale for new data
+                // New X axis data
                 xLinearScale = xScale(DescriptiveData, Selected_X);
 
-                //update x axis with transition
+                // Update X axis
                 xAxis = renderAxesX(xLinearScale, xAxis);
 
-                //update circles with new x values
+                // Update circles according to new values
                 circlesGroup = renderCircles(circlesGroup, xLinearScale, Selected_X, yLinearScale, Selected_Y);
 
-                //update text with new x values
+                // Update text
                 textGroup = renderText(textGroup, xLinearScale, Selected_X, yLinearScale, Selected_Y);
 
-                //update tooltips with new info
+                // Update tooltips
                 circlesGroup = updateToolTip(Selected_X, Selected_Y, circlesGroup);
 
-                //change classes to change bold text
+                // Change classes to format text when active
                 if (Selected_X === "poverty") {
                     povertyLabel.classed("active", true).classed("inactive", false);
                     ageLabel.classed("active", false).classed("inactive", true);
@@ -347,16 +340,16 @@ d3.csv("./assets/data/data.csv").then(function(DescriptiveData) {
             }
         });
 
-    //y axis labels event listener
-    yLabelsGroup.selectAll("text")
+    // Y axis event listener
+    GroupY.selectAll("text")
     .on("click", function() {
-        //get value of selection
+        // Get value or new value
         var value = d3.select(this).attr("value");
 
-        //check if value is same as current axis
+        // Is it the same?
         if (value != Selected_Y) {
 
-            //replace Selected_Y with value
+            // If it changes assign new value
             Selected_Y = value;
 
             //update y scale for new data
