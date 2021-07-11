@@ -11,6 +11,7 @@
 // - Note: You'll need to use python -m http.server to run the visualization.
 //   This will host the page at localhost:8000 in your web browser.
 
+// STEP 1:  Set up the chart ***********
 // Set SVG dimensions and borders
 var svgW = 960
 var svgH = 620
@@ -25,6 +26,7 @@ var margin = {
 var chartW = svgW - margin.right - margin.left;
 var chartH = svgH - margin.top - margin.bottom;
 
+// STEP 2: Create the SVG wrapper ************
 // Append SVG wrapper and group that will hold chart
 let svg = d3
     .select(".chart")
@@ -37,4 +39,7 @@ let svg = d3
 let chartGroup = svg.append("g") // The ‘g’ element is a container element for grouping together related graphics elements.
     .attr("transform",`translate(${margin.left}, ${margin.top})`);
 
+// STEP 3: Import data *******************
 // Open file and assign values to x and y axis.
+d3.csv("assets/data/data.csv").then(function (data, err) {
+    if (err) throw err;
