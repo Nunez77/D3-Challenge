@@ -21,6 +21,8 @@ var margin = {
     bottom: 200,
     left: 100
 };
+var width = svgWidth * .75;
+var height = svgHeight * .75;
 
 // Determine chart's dimensions
 var chartW = svgW - margin.right - margin.left;
@@ -45,8 +47,8 @@ d3.csv("assets/data/data.csv").then(function (data, err) {
     if (err) throw err;
 
     data.forEach(function(data) {
-        data.income = +data.income;        // Select Healthcare
-        data.smokes = +data.smokes;        // Select Poverty
+        data.income = +data.income;        // Select Income
+        data.smokes = +data.smokes;        // Select Smokes
     });
 
     // Scale y to chart height
@@ -60,5 +62,103 @@ d3.csv("assets/data/data.csv").then(function (data, err) {
     // Create axes
     var yAxis = d3.axisLeft(yScale);
     var xAxis = d3.axisBottom(xScale);
+
+    var xScale = d3.scaleLinear().range([0, width]);
+    var yScale = d3.scaleLinear().range([height, 0]);
+
+    // Create variable variables
+    var xMin;
+    var xMax;
+    var yMin;
+    var yMax;
+
+    xMin = d3.min(data, function (data) {
+        return data.income;
+    });
+
+    xMax = d3.max(data, function (data) {
+        return data.income;
+    });
+
+    yMin = d3.min(data, function (data) {
+        return data.smokes;
+    });
+
+    yMax = d3.max(data, function (data) {
+        return data.smokes;
+    });
+
+    var xScale = xScale.domain([xMin, xMax]);
+    var yScale = yScale.domain([yMin, yMax]);
+
+    chartGroup.append("g")
+        .classed("x-axis", true)
+        .attr("transform", `translate(0, ${height})`)
+        .call(xAxis);
+
+    chartGroup.append("g")
+        .call(yAxis);
+
+    var circlesGroup = chartGroup.selectAll("circle")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("cx", d => xScale(d.income +2))
+        .attr("cy", d => yScale(d.smokes +1))
+        .attr("r", 20)
+        .attr("fill", "blue")
+        .attr("opacity", ".3")
+        .on("mouseout", function (data) {
+            toolTip.hide(data);
+        });
+
+    var toolTip = d3.tip()
+        .attr("class", "tooltip")
+        .offset([80, -60])
+        .html(function (d) {
+            return (`${d.abbr}`);
+        });
+
+    chartGroup.call(toolTip);
+
+    circlesGroup.call(toolTip);
+
+    circlesGroup.on("mouseover", function (data) {
+        toolTip.show(data);
+    })
+
+        .on("mouseout", function (data) {
+            toolTip.hide(data);
+        });
+
+    chartGroup.append("text")
+        .style("font-size", "12px")
+        .selectAll("tspan")
+        .data(data)
+        .enter()
+        .append("tspan")
+            .attr("x", function (data) {
+                return xScale(data.income + 1.5);
+            })
+            .attr("y", function (data) {
+                return yScale(data.smokes + .5);
+            })
+            .text(function (data) {
+                return data.abbr
+            });
+
+    chartGroup.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - margin.left + 40)
+        .attr("x", 0 - (height / 1.5))
+        .attr("dy", "1em")
+        .attr("class", "text")
+        .text("Lacks income(%)");
+
+    chartGroup.append("text")
+        .attr("transform", `translate(${width / 1.5}, ${height + margin.top + 40})`)
+        .attr("class", "text")
+        .text("In smokes (%)");
+});
     
 
