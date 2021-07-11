@@ -21,8 +21,8 @@ var margin = {
     bottom: 200,
     left: 100
 };
-var width = svgWidth * .75;
-var height = svgHeight * .75;
+//  var width = svgWidth * .75;
+// var height = svgHeight * .75;
 
 // Determine chart's dimensions
 var chartW = svgW - margin.right - margin.left;
@@ -32,7 +32,7 @@ var chartH = svgH - margin.top - margin.bottom;
 // Append SVG wrapper and group that will hold chart
 let svg = d3
     .select(".chart")
-    .select("#scatter")
+    // .select("#scatter")
     .append("svg")
     .attr("class","chart")
     .attr("width",svgW)
@@ -153,12 +153,12 @@ d3.csv("assets/data/data.csv").then(function (data, err) {
         .attr("x", 0 - (height / 1.5))
         .attr("dy", "1em")
         .attr("class", "text")
-        .text("Lacks income(%)");
+        .text("Annual Income ($USD)");
 
     chartGroup.append("text")
         .attr("transform", `translate(${width / 1.5}, ${height + margin.top + 40})`)
         .attr("class", "text")
-        .text("In smokes (%)");
+        .text("Smokes (%)");
 });
     
 
