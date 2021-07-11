@@ -92,8 +92,8 @@ function renderAxesY(newYScale, yAxis) {
     return yAxis;
 }
 
-//function used for updating circles group with a transition to new circles
-//for change in x axis or y axis
+// Function used for updating circles group with a transition to new circles
+// with new selections
 function renderCircles(circlesGroup, newXScale, Selected_X, newYScale, Selected_Y) {
 
     circlesGroup.transition()
@@ -104,7 +104,7 @@ function renderCircles(circlesGroup, newXScale, Selected_X, newYScale, Selected_
     return circlesGroup;
 }
 
-//function used for updating state labels with a transition to new 
+// Function to update state labels 
 function renderText(textGroup, newXScale, Selected_X, newYScale, Selected_Y) {
 
     textGroup.transition()
@@ -114,25 +114,24 @@ function renderText(textGroup, newXScale, Selected_X, newYScale, Selected_Y) {
 
     return textGroup;
 }
-//function to stylize x-axis values for tooltips
+// Function used for updating styles according to variable
 function styleX(value, Selected_X) {
 
-    //stylize based on variable chosen
-    //poverty percentage
+    // Update style according to variable: Poverty
     if (Selected_X === 'poverty') {
         return `${value}%`;
     }
-    //household income in dollars
+    // Update style according to variable: Household Income
     else if (Selected_X === 'income') {
-        return `$${value}`;
+        return `USD $${value}`;
     }
-    //age (number)
+    // Update style according to variable: Age
     else {
         return `${value}`;
     }
 }
 
-// function used for updating circles group with new tooltip
+// Function used for updating circles group with new tooltip
 function updateToolTip(Selected_X, Selected_Y, circlesGroup) {
 
     //select x label
