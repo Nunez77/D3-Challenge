@@ -352,22 +352,22 @@ d3.csv("./assets/data/data.csv").then(function(DescriptiveData) {
             // If it changes assign new value
             Selected_Y = value;
 
-            //update y scale for new data
+            // Update scale
             yLinearScale = yScale(DescriptiveData, Selected_Y);
 
-            //update x axis with transition
+            // Update Y axis
             yAxis = renderAxesY(yLinearScale, yAxis);
 
-            //update circles with new y values
+            // Update circles
             circlesGroup = renderCircles(circlesGroup, xLinearScale, Selected_X, yLinearScale, Selected_Y);
 
-            //update text with new y values
+            // Update text
             textGroup = renderText(textGroup, xLinearScale, Selected_X, yLinearScale, Selected_Y)
 
-            //update tooltips with new info
+            // Tooltips update
             circlesGroup = updateToolTip(Selected_X, Selected_Y, circlesGroup);
 
-            //change classes to change bold text
+            // Assign classes to text
             if (Selected_Y === "obesity") {
                 obesityLabel.classed("active", true).classed("inactive", false);
                 smokesLabel.classed("active", false).classed("inactive", true);
