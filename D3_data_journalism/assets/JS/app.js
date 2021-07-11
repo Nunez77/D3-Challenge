@@ -43,3 +43,22 @@ let chartGroup = svg.append("g") // The ‘g’ element is a container element f
 // Open file and assign values to x and y axis.
 d3.csv("assets/data/data.csv").then(function (data, err) {
     if (err) throw err;
+
+    data.forEach(function(data) {
+        data.income = +data.income;        // Select Healthcare
+        data.smokes = +data.smokes;        // Select Poverty
+    });
+
+    // Scale y to chart height
+    var yScale = d3.scaleLinear()
+        .domain([0, d3.max(dataArray)])
+        .range([chartH, 0]);
+    // Scale x to chart width
+    var xScale = d3.scaleLinear()
+        .range([0, chartW]);
+
+    // Create axes
+    var yAxis = d3.axisLeft(yScale);
+    var xAxis = d3.axisBottom(xScale);
+    
+
