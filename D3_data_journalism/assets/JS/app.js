@@ -14,8 +14,8 @@
 // STEP 1:  Set up the chart ***********
 // Set SVG dimensions and borders
 
-var svgW = 960;
-var svgH = 620;
+var svgW = 768;
+var svgH = 496;
 
 var margin = {
     top: 20,
